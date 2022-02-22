@@ -78,7 +78,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
-            app:srcCompat="@drawable/india" />
+            app:srcCompat="@drawable/usa" />
 
         <Spinner
             android:id="@+id/spinner"

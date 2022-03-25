@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ic_homebg"
-    tools:context="com.amarjeetsahoo.covid19.com.covid19.comp590.MainActivity">
+    tools:context="com.covid19.comp590.MainActivity">
 
     <Button
         android:id="@+id/stat"

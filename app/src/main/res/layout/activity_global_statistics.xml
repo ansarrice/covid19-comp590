@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#473F97"
-    tools:context="com.amarjeetsahoo.covid19.com.covid19.comp590.GlobalStatistics">
+    tools:context="com.covid19.comp590.GlobalStatistics">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/gcardView"
@@ -45,7 +45,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/graphikmedium"
-                android:text="Active"
+                android:text="Positive"
                 android:textColor="#FFFFFF"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -124,7 +124,7 @@
         android:layout_marginStart="64dp"
         android:layout_marginTop="32dp"
         android:fontFamily="@font/graphiksemibold"
-        android:text="Total"
+        android:text=""
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toStartOf="@+id/gtextView9"
@@ -137,7 +137,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/graphiksemibold"
-        android:text="Today"
+        android:text="Total"
         android:textAlignment="center"
         android:textColor="#B2AFAF"
         app:layout_constraintBottom_toBottomOf="@+id/gtextView8"
@@ -152,7 +152,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="64dp"
         android:fontFamily="@font/graphiksemibold"
-        android:text="Yesterday"
+        android:text=""
         android:textAlignment="center"
         android:textColor="#B2AFAF"
         app:layout_constraintBottom_toBottomOf="@+id/gtextView9"
@@ -184,7 +184,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/graphikmedium"
-                android:text="Affected"
+                android:text="Cases"
                 android:textColor="#FFFFFF"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -354,16 +354,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gcardView4">
 
-        <pl.droidsonroids.gif.GifImageView
-            android:id="@+id/gimageView7"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_marginBottom="16dp"
+        <com.smarteist.autoimageslider.SliderLayout
+            android:id="@+id/imageslider"
+            android:layout_width="390dp"
+            android:layout_height="249dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="2dp"
+            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.47"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/gtextView22"
-            android:src="@drawable/mapworld" />
+            app:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:id="@+id/gtextView22"

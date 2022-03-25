@@ -108,12 +108,15 @@ public class Statistics extends AppCompatActivity {
             }
         });
         OkHttpClient client =new OkHttpClient();
+
         final Request request = new Request.Builder()
-                .url("https://covid-19-india-data-by-zt.p.rapidapi.com/GetIndiaTotalCounts")
+                .url("https://api.covidactnow.org/v2/country/US.json?apiKey=afc9aab013284ca090f66bd3be398a6d")
                 .get()
-                .addHeader("x-rapidapi-host", "covid-19-india-data-by-zt.p.rapidapi.com")
-                .addHeader("x-rapidapi-key", "PASTE YOUR KEY HERE FROM RAPID_API") //HAVE TO REMOVE FOR PRIVACY CONCERN
+                .addHeader("User-Agent","android").
+                header("Content-Type","text/html; charset=utf-8")
+                //HAVE TO REMOVE FOR PRIVACY CONCERN
                 .build();
+
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -124,20 +127,38 @@ public class Statistics extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 if(response.isSuccessful())
                 {
+
                     final String myResponse =response.body().string();
+
+
                     Statistics.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            String activ,confirm,newconfirm,death,recover;
-                            System.out.println(myResponse);
+                            String activ,confirm,newconfirm,death,vaccine;
+
 
                             try {
 
                                 JSONObject obj = new JSONObject(myResponse);
 
-                                JSONArray userArray = obj.getJSONArray("data");
+                                JSONObject actualValue = obj.getJSONObject("actuals");
 
-                                for (int i = 0; i < userArray.length(); i++) {
+
+
+                                activ = actualValue.getString("positiveTests");
+                                active.setText(activ);
+                                confirm = actualValue.getString("cases");
+                                confirmed.setText(confirm);
+                                newconfirm = actualValue.getString("newCases");
+                                newconfirmed.setText(newconfirm);
+                                death =actualValue.getString("deaths");
+                                deaths.setText(death);
+                                vaccine = actualValue.getString("vaccinationsCompleted");
+                                recovered.setText(vaccine);
+
+
+
+                                /*for (int i = 0; i < userArray.length(); i++) {
 
                                     JSONObject userDetail = userArray.getJSONObject(i);
 
@@ -156,7 +177,7 @@ public class Statistics extends AppCompatActivity {
                                     recover=userDetail.getString("recovered");
                                     recovered.setText(recover);
 
-                                }
+                                }*/
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -169,36 +190,25 @@ public class Statistics extends AppCompatActivity {
     }
 
     private void setSliderViews() {
-        for(int i=0;i<6;i++)
+        for(int i=0;i<3;i++)
         {
             DefaultSliderView sliderView =new DefaultSliderView(this);
 
             switch (i)
             {
                 case 0:
-                    sliderView.setImageDrawable(R.drawable.mygov_158434557852221771);
-                    sliderView.setDescription("Share your Ideas & Suggestions to help fight Coronavirus");
+                    sliderView.setImageDrawable(R.drawable.rice_covid);
+                    sliderView.setDescription("Rice University Campus Covid Report Form");
                     break;
                 case 1:
-                    sliderView.setImageDrawable(R.drawable.mygov_158530539251553221);
-                    sliderView.setDescription("Join us in the fight against COVID-19");
+                    sliderView.setImageDrawable(R.drawable.rice_hashmap);
+                    sliderView.setDescription("COMP590 Join us in the fight against COVID-19");
                     break;
                 case 2:
-                    sliderView.setImageDrawable(R.drawable.mygov_158618781251553221);
-                    sliderView.setDescription("Myths mislead you, facts protect you. Stay Updated with facts related to COVID-19");
+                    sliderView.setImageDrawable(R.drawable.usa_cdc);
+                    sliderView.setDescription("Centers for Disease Control and Prevention");
                     break;
-                case 3:
-                    sliderView.setImageDrawable(R.drawable.tn_0);
-                    sliderView.setDescription("Aarogya Setu App : COVID-19 Tracker launched to alert you and keep you safe. Download now!");
-                    break;
-                case 4:
-                    sliderView.setImageDrawable(R.drawable.tn1);
-                    sliderView.setDescription("MyGov COVID-19 Shri Shakti Challenge");
-                    break;
-                case 5:
-                    sliderView.setImageDrawable(R.drawable.tn_1);
-                    sliderView.setDescription("Innovation Challenge for Development of Video Conferencing Solution");
-                    break;
+
 
             }
             sliderView.setImageScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -210,33 +220,18 @@ public class Statistics extends AppCompatActivity {
                     switch (finalI) {
                         case 0:
                             Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                                    Uri.parse("https://www.mygov.in/group-issue/share-your-ideas-suggestions-help-fight-coronavirus/"));
+                                    Uri.parse("https://coronavirus.rice.edu/"));
                             startActivity(browserIntent);
                             break;
                         case 1:
                             Intent browserIntent1 = new Intent(Intent.ACTION_VIEW,
-                                    Uri.parse("https://www.mygov.in/covid-19/?target=webview&type=campaign&nid=0"));
+                                    Uri.parse("http://hsmap.rice.edu/"));
                             startActivity(browserIntent1);
                             break;
                         case 2:
                             Intent browserIntent2 = new Intent(Intent.ACTION_VIEW,
-                                    Uri.parse("https://www.mygov.in/covid-19/?target=webview&type=campaign&nid=0#mythbuster"));
+                                    Uri.parse("https://www.cdc.gov/"));
                             startActivity(browserIntent2);
-                            break;
-                        case 3:
-                            Intent browserIntent3 = new Intent(Intent.ACTION_VIEW,
-                                    Uri.parse("https://play.google.com/store/apps/details?id=nic.goi.aarogyasetu&hl=en"));
-                            startActivity(browserIntent3);
-                            break;
-                        case 4:
-                            Intent browserIntent4 = new Intent(Intent.ACTION_VIEW,
-                                    Uri.parse("https://www.mygov.in/task/mygov-covid-19-shri-shakti-challenge/"));
-                            startActivity(browserIntent4);
-                            break;
-                        case 5:
-                            Intent browserIntent5 = new Intent(Intent.ACTION_VIEW,
-                                    Uri.parse("https://www.mygov.in/task/innovation-challenge-development-video-conferencing-solution/"));
-                            startActivity(browserIntent5);
                             break;
                     }
                 }

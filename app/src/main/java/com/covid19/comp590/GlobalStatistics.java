@@ -183,6 +183,7 @@ public class GlobalStatistics extends AppCompatActivity {
                             Intent browserIntent = new Intent(Intent.ACTION_VIEW,
                                     Uri.parse("https://coronavirus.app/map"));
                             startActivity(browserIntent);
+                            System.out.println(" 11111 ");
                             break;
 
                     }

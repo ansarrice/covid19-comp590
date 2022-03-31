@@ -87,7 +87,7 @@ public class Statistics extends AppCompatActivity {
                                                   switch (item.getTitle().toString())
                                                   {
                                                       case "About Developer":
-                                                          Toast.makeText(Statistics.this, "Amarjeet Sahoo\n18ECE045\nGIET University",
+                                                          Toast.makeText(Statistics.this, "Ansar WeiHong\n18ECE045\nRice University",
                                                                   Toast.LENGTH_LONG).show();
                                                           break;
                                                   }
@@ -129,7 +129,7 @@ public class Statistics extends AppCompatActivity {
                 {
 
                     final String myResponse =response.body().string();
-
+                    System.out.println(myResponse);
 
                     Statistics.this.runOnUiThread(new Runnable() {
                         @Override

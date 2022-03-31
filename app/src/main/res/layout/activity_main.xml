@@ -144,8 +144,9 @@
         android:drawableLeft="@drawable/ic_message_circle"
         android:drawablePadding="8dp"
         android:fontFamily="@font/graphikmedium"
+        android:onClick="sendMesReq"
         android:paddingLeft="16dp"
-        android:text="Whats App"
+        android:text="Sche Test"
         android:textAlignment="textStart"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
@@ -154,7 +155,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button"
-        android:onClick="WhatsappReq"/>
+        />
 
     <TextView
         android:id="@+id/textView4"

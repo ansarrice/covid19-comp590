@@ -76,13 +76,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void CallNow(View view) {
-        Intent i1 =new Intent(Intent.ACTION_VIEW, Uri.parse("tel:+911123978046"));
+        Intent i1 =new Intent(Intent.ACTION_VIEW, Uri.parse("tel:713-348-6000"));
         startActivity(i1);
     }
 
     public void WhatsappReq(View view) {
         Intent i2 =new Intent(Intent.ACTION_VIEW,
-                Uri.parse("https://api.whatsapp.com/send?phone=41798931892&text=hi&source=&data=&app_absent="));
+                Uri.parse("https://veoci.com/v/p/dashboard/jnmraf9eqg"));
+        startActivity(i2);
+    }
+
+    public void sendMesReq(View view) {
+        Intent i2 =new Intent(Intent.ACTION_VIEW,
+                Uri.parse("https://veoci.com/v/p/dashboard/jnmraf9eqg"));
         startActivity(i2);
     }
 }

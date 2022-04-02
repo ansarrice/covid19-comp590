@@ -1,8 +1,20 @@
 package com.covid19.comp590;
 
+import static android.content.ContentValues.TAG;
+
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import com.google.android.gms.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
+import android.provider.Settings;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -11,9 +23,21 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import com.smarteist.autoimageslider.DefaultSliderView;
 import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderLayout;
@@ -25,32 +49,43 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import io.nlopez.smartlocation.SmartLocation;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+
 public class Statistics extends AppCompatActivity {
-    ImageView back,nofity;
-    TextView active,confirmed,deaths,recovered,newconfirmed;
+    ImageView back, nofity;
+    TextView active, confirmed, deaths, recovered, newconfirmed, locationname, risklevel;
     Button global;
     SliderLayout sliderLayout;
     FloatingActionButton floatbtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
 
-        back =(ImageView)findViewById(R.id.dash);
-        nofity=(ImageView)findViewById(R.id.notify);
-        active=(TextView)findViewById(R.id.active);
-        confirmed=(TextView)findViewById(R.id.confirmed);
-        deaths=(TextView)findViewById(R.id.deaths);
-        recovered=(TextView)findViewById(R.id.recovered);
-        newconfirmed=(TextView)findViewById(R.id.newconfirmed);
-        global=(Button)findViewById(R.id.button4);
+        back = (ImageView) findViewById(R.id.dash);
+        nofity = (ImageView) findViewById(R.id.notify);
+        active = (TextView) findViewById(R.id.active);
+        confirmed = (TextView) findViewById(R.id.confirmed);
+        deaths = (TextView) findViewById(R.id.deaths);
+        recovered = (TextView) findViewById(R.id.recovered);
+        newconfirmed = (TextView) findViewById(R.id.newconfirmed);
+        global = (Button) findViewById(R.id.button4);
+        locationname = (TextView) findViewById(R.id.textView13);
+        risklevel = (TextView) findViewById(R.id.textView14);
+        locationname.setText("Texas Risk:");
+
+
+
+
+
 
         floatbtn=(FloatingActionButton)findViewById(R.id.floatbtn);
         floatbtn.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +151,14 @@ public class Statistics extends AppCompatActivity {
                 header("Content-Type","text/html; charset=utf-8")
                 //HAVE TO REMOVE FOR PRIVACY CONCERN
                 .build();
+        final Request request1 = new Request.Builder()
+                .url("https://api.covidactnow.org/v2/state/TX.json?apiKey=afc9aab013284ca090f66bd3be398a6d")
+                .get()
+                .addHeader("User-Agent","android").
+                        header("Content-Type","text/html; charset=utf-8")
+                //HAVE TO REMOVE FOR PRIVACY CONCERN
+                .build();
+
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -129,7 +172,7 @@ public class Statistics extends AppCompatActivity {
                 {
 
                     final String myResponse =response.body().string();
-                    System.out.println(myResponse);
+                    //System.out.println(myResponse);
 
                     Statistics.this.runOnUiThread(new Runnable() {
                         @Override
@@ -187,7 +230,52 @@ public class Statistics extends AppCompatActivity {
 
             }
         });
+        client.newCall(request1).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if(response.isSuccessful())
+                {
+
+                    final String myResponse =response.body().string();
+                    //System.out.println(myResponse);
+
+                    Statistics.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String risk;
+
+
+                            try {
+
+                                JSONObject obj = new JSONObject(myResponse);
+                                System.out.println(obj);
+                                JSONObject riskLevel = obj.getJSONObject("riskLevels");
+                                risk = riskLevel.getString("overall");
+                                risklevel.setText(risk);
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+
+            }
+        });
+
+
     }
+
+
+
+
+
 
     private void setSliderViews() {
         for(int i=0;i<3;i++)

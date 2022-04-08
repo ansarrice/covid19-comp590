@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
                         switch (item.getTitle().toString())
                         {
                             case "About Developer":
-                                Toast.makeText(MainActivity.this, "Amarjeet Sahoo\n18ECE045\nGIET University",
+                                Toast.makeText(MainActivity.this, "Ansar Weihong\n18ECE045\nRice University",
                                         Toast.LENGTH_LONG).show();
                                 break;
                         }

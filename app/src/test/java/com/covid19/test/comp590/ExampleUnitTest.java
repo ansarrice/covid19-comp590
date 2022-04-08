@@ -1,4 +1,4 @@
-package com.amarjeetsahoo.covid19;
+package com.covid19.test.comp590;
 
 import org.junit.Test;
 

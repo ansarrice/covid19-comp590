@@ -1,4 +1,4 @@
-package com.amarjeetsahoo.covid19;
+package com.covid19.androidtest.comp590;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("com.amarjeetsahoo.covid19", appContext.getPackageName());
+        assertEquals("com.covid19.comp590", appContext.getPackageName());
     }
 }

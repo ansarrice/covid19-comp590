@@ -63,6 +63,7 @@ public class Statistics extends AppCompatActivity {
     Button global;
     SliderLayout sliderLayout;
     FloatingActionButton floatbtn;
+    Button riskbtn;
 
 
     @Override
@@ -80,6 +81,7 @@ public class Statistics extends AppCompatActivity {
         global = (Button) findViewById(R.id.button4);
         locationname = (TextView) findViewById(R.id.textView13);
         risklevel = (TextView) findViewById(R.id.textView14);
+        riskbtn = (Button)findViewById(R.id.button5);
         locationname.setText("Texas Risk:");
 
 
@@ -87,14 +89,14 @@ public class Statistics extends AppCompatActivity {
 
 
 
-        floatbtn=(FloatingActionButton)findViewById(R.id.floatbtn);
-        floatbtn.setOnClickListener(new View.OnClickListener() {
+       // floatbtn=(FloatingActionButton)findViewById(R.id.floatbtn);
+      /*  floatbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Statistics.this,bot.class);
                 startActivity(intent);
             }
-        });
+        });*/
 
         sliderLayout=(SliderLayout) findViewById(R.id.imageslider);
         sliderLayout.setIndicatorAnimation(IndicatorAnimations.FILL);
@@ -109,7 +111,14 @@ public class Statistics extends AppCompatActivity {
                 finish();
             }
         });
-
+        riskbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri uri = Uri.parse("https://covidactnow.org/us/texas-tx/county/harris_county/?s=31751998");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
         nofity.setOnClickListener(new View.OnClickListener() {
                                       @Override
                                       public void onClick(View view) {

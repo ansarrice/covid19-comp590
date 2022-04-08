@@ -87,7 +87,7 @@ public class GlobalStatistics extends AppCompatActivity {
                         switch (item.getTitle().toString())
                         {
                             case "About Developer":
-                                Toast.makeText(GlobalStatistics.this, "Ansar WeiHong\n18ECE045\nCOMP 590",
+                                Toast.makeText(GlobalStatistics.this, "Ansar WeiHong\nCOMP 590",
                                         Toast.LENGTH_LONG).show();
                                 break;
                         }

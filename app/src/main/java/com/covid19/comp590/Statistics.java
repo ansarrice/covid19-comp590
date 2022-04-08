@@ -131,7 +131,7 @@ public class Statistics extends AppCompatActivity {
                                                   switch (item.getTitle().toString())
                                                   {
                                                       case "About Developer":
-                                                          Toast.makeText(Statistics.this, "Ansar WeiHong\n18ECE045\nRice University",
+                                                          Toast.makeText(Statistics.this, "Ansar WeiHong\nRice University",
                                                                   Toast.LENGTH_LONG).show();
                                                           break;
                                                   }

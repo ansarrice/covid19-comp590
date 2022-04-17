@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.google.android.gms:play-services-gass:12.0.1@aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/800dcde3b3f807391a70901f42fdb69c/transformed/jetified-play-services-gass-12.0.1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/cef26228a1b5bb88b8281a2c0dc519be/transformed/jetified-play-services-gass-12.0.1/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/cef26228a1b5bb88b8281a2c0dc519be/transformed/jetified-play-services-gass-12.0.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/cef26228a1b5bb88b8281a2c0dc519be/transformed/jetified-play-services-gass-12.0.1/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

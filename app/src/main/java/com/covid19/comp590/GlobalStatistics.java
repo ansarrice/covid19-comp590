@@ -2,6 +2,7 @@ package com.covid19.comp590;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.smarteist.autoimageslider.DefaultSliderView;
@@ -23,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -31,17 +34,20 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class GlobalStatistics extends AppCompatActivity {
+public class GlobalStatistics extends AppCompatActivity implements Serializable {
     ImageView back,gnotify;
     TextView active,confirmed,deaths,recovered,newconfirmed;
     Button usa;
     SliderLayout sliderLayout;
+    String state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_global_statistics);
-
+        Intent  intent = getIntent();
+        state = (String) intent.getSerializableExtra("state");
+        System.out.println(state);
         back =(ImageView)findViewById(R.id.gimageView5);
         gnotify=(ImageView)findViewById(R.id.gnotify);
         active=(TextView)findViewById(R.id.gactive);
@@ -57,9 +63,11 @@ public class GlobalStatistics extends AppCompatActivity {
         setSliderViews();
 
         usa.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
                 Intent in=new Intent(GlobalStatistics.this,Statistics.class);
+                in.putExtra("state",state);
                 startActivity(in);
                 finish();
             }

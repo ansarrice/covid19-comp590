@@ -39,6 +39,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
 
@@ -50,7 +51,7 @@ import okhttp3.Response;
 
 
 @RequiresApi(api = Build.VERSION_CODES.N)
-public class Statistics extends AppCompatActivity {
+public class Statistics extends AppCompatActivity implements Serializable {
     private static final int REQUEST_LOCATION_PERMISSION_CODE = 1;
     ImageView back, nofity;
     TextView active, confirmed, deaths, recovered, newconfirmed, locationname, risklevel;
@@ -60,14 +61,25 @@ public class Statistics extends AppCompatActivity {
     Button riskbtn;
     FusedLocationProviderClient fusedLocationClient;
     String riskurl = "https://api.covidactnow.org/v2/state/";
-    String riskurl2 =".json?apiKey=afc9aab013284ca090f66bd3be398a6d";
+    String riskurl2 = ".json?apiKey=afc9aab013284ca090f66bd3be398a6d";
     String realriskurl = "";
+    String detailrisk1 = "https://covidactnow.org/us/";
+    String detailrisk2 = "/?s=32452059";
+    String detailriskurl = "";
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
+        Intent  intent = getIntent();
+        System.out.println(intent);
+        String state = (String) intent.getSerializableExtra("state");
 
+        System.out.println("last time i chance please"+state);
+        realriskurl = riskurl + state + riskurl2;
+        detailriskurl = detailrisk1 + state +detailrisk2;
         back = (ImageView) findViewById(R.id.dash);
         nofity = (ImageView) findViewById(R.id.notify);
         active = (TextView) findViewById(R.id.active);
@@ -79,7 +91,8 @@ public class Statistics extends AppCompatActivity {
         locationname = (TextView) findViewById(R.id.textView13);
         risklevel = (TextView) findViewById(R.id.textView14);
         riskbtn = (Button) findViewById(R.id.button5);
-        locationname.setText("Texas Risk:");
+        locationname.setText(state  + "  Risk: ");
+
         Thread[] threads = new Thread[2];
 
         // floatbtn=(FloatingActionButton)findViewById(R.id.floatbtn);
@@ -102,46 +115,37 @@ public class Statistics extends AppCompatActivity {
 
             return;
         }*/
-        threads[0] = new Thread(()-> {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                                Manifest.permission.ACCESS_COARSE_LOCATION},
-                        REQUEST_LOCATION_PERMISSION_CODE);
-                fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-                fusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                // Got last known location. In some rare situations this can be null.
-                                if (location != null) {
-                                    // Logic to handle location object
-                                    System.out.println(location);
-                                    getAddress(location);
-                                }
-                            }
-                        });
-            } else {
-                fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-                fusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                // Got last known location. In some rare situations this can be null.
-                                if (location != null) {
-                                    // Logic to handle location object
-                                    System.out.println(location);
-                                    getAddress(location);
-                                }
-                            }
-                        });
+        /*
+        threads[0] = new Thread(() -> {
+
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
             }
+            fusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            // Got last known location. In some rare situations this can be null.
+                            if (location != null) {
+                                // Logic to handle location object
+                                System.out.println(location);
+                                getAddress(location);
+                            }
+                        }
+                    });
+
         });
         threads[0].start();
 
-
+        */
 
         sliderLayout=(SliderLayout) findViewById(R.id.imageslider);
         sliderLayout.setIndicatorAnimation(IndicatorAnimations.FILL);
@@ -152,6 +156,7 @@ public class Statistics extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent g=new Intent(Statistics.this,GlobalStatistics.class);
+                g.putExtra("state", state);
                 startActivity(g);
                 finish();
             }
@@ -159,33 +164,33 @@ public class Statistics extends AppCompatActivity {
         riskbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Uri uri = Uri.parse("https://covidactnow.org/us/texas-tx/county/harris_county/?s=31751998");
+                Uri uri = Uri.parse(detailriskurl);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
             }
         });
         nofity.setOnClickListener(new View.OnClickListener() {
-                                      @Override
-                                      public void onClick(View view) {
-                                          PopupMenu popup = new PopupMenu(Statistics.this, nofity);
-                                          //Inflating the Popup using xml file
-                                          popup.getMenuInflater().inflate(R.menu.menu, popup.getMenu());
-                                          //registering popup with OnMenuItemClickListener
-                                          popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                                              public boolean onMenuItemClick(MenuItem item) {
-                                                  switch (item.getTitle().toString())
-                                                  {
-                                                      case "About Developer":
-                                                          Toast.makeText(Statistics.this, "Ansar WeiHong\nRice University",
-                                                                  Toast.LENGTH_LONG).show();
-                                                          break;
-                                                  }
-                                                  //Toast.makeText(Statistics.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
-                                                  return true;
-                                              }
-                                          }); popup.show();
-                                      }
-                                  });
+            @Override
+            public void onClick(View view) {
+                PopupMenu popup = new PopupMenu(Statistics.this, nofity);
+                //Inflating the Popup using xml file
+                popup.getMenuInflater().inflate(R.menu.menu, popup.getMenu());
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getTitle().toString())
+                        {
+                            case "About Developer":
+                                Toast.makeText(Statistics.this, "Ansar WeiHong\nRice University",
+                                        Toast.LENGTH_LONG).show();
+                                break;
+                        }
+                        //Toast.makeText(Statistics.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                }); popup.show();
+            }
+        });
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,60 +202,60 @@ public class Statistics extends AppCompatActivity {
             }
         });
         threads[1] = new Thread(()->{
-           OkHttpClient client = new OkHttpClient();
+            OkHttpClient client = new OkHttpClient();
 
-           final Request request = new Request.Builder()
-                   .url("https://api.covidactnow.org/v2/country/US.json?apiKey=afc9aab013284ca090f66bd3be398a6d")
-                   .get()
-                   .addHeader("User-Agent", "android").
-                           header("Content-Type", "text/html; charset=utf-8")
-                   //HAVE TO REMOVE FOR PRIVACY CONCERN
-                   .build();
-           final Request request1 = new Request.Builder()
-                   .url(realriskurl)
-                   .get()
-                   .addHeader("User-Agent", "android").
-                           header("Content-Type", "text/html; charset=utf-8")
-                   //HAVE TO REMOVE FOR PRIVACY CONCERN
-                   .build();
-
-
-           client.newCall(request).enqueue(new Callback() {
-               @Override
-               public void onFailure(Call call, IOException e) {
-                   e.printStackTrace();
-               }
-
-               @Override
-               public void onResponse(Call call, Response response) throws IOException {
-                   if (response.isSuccessful()) {
-
-                       final String myResponse = response.body().string();
-                       //System.out.println(myResponse);
-
-                       Statistics.this.runOnUiThread(new Runnable() {
-                           @Override
-                           public void run() {
-                               String activ, confirm, newconfirm, death, vaccine;
+            final Request request = new Request.Builder()
+                    .url("https://api.covidactnow.org/v2/country/US.json?apiKey=afc9aab013284ca090f66bd3be398a6d")
+                    .get()
+                    .addHeader("User-Agent", "android").
+                            header("Content-Type", "text/html; charset=utf-8")
+                    //HAVE TO REMOVE FOR PRIVACY CONCERN
+                    .build();
+            final Request request1 = new Request.Builder()
+                    .url(realriskurl)
+                    .get()
+                    .addHeader("User-Agent", "android").
+                            header("Content-Type", "text/html; charset=utf-8")
+                    //HAVE TO REMOVE FOR PRIVACY CONCERN
+                    .build();
 
 
-                               try {
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
+                }
 
-                                   JSONObject obj = new JSONObject(myResponse);
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (response.isSuccessful()) {
 
-                                   JSONObject actualValue = obj.getJSONObject("actuals");
+                        final String myResponse = response.body().string();
+                        //System.out.println(myResponse);
+
+                        Statistics.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String activ, confirm, newconfirm, death, vaccine;
 
 
-                                   activ = actualValue.getString("positiveTests");
-                                   active.setText(activ);
-                                   confirm = actualValue.getString("cases");
-                                   confirmed.setText(confirm);
-                                   newconfirm = actualValue.getString("newCases");
-                                   newconfirmed.setText(newconfirm);
-                                   death = actualValue.getString("deaths");
-                                   deaths.setText(death);
-                                   vaccine = actualValue.getString("vaccinationsCompleted");
-                                   recovered.setText(vaccine);
+                                try {
+
+                                 JSONObject obj = new JSONObject(myResponse);
+
+                                    JSONObject actualValue = obj.getJSONObject("actuals");
+
+
+                                    activ = actualValue.getString("positiveTests");
+                                    active.setText(activ);
+                                    confirm = actualValue.getString("cases");
+                                    confirmed.setText(confirm);
+                                    newconfirm = actualValue.getString("newCases");
+                                    newconfirmed.setText(newconfirm);
+                                    death = actualValue.getString("deaths");
+                                    deaths.setText(death);
+                                    vaccine = actualValue.getString("vaccinationsCompleted");
+                                    recovered.setText(vaccine);
 
 
 
@@ -274,59 +279,59 @@ public class Statistics extends AppCompatActivity {
                                     recovered.setText(recover);
 
                                 }*/
-                               } catch (JSONException e) {
-                                   e.printStackTrace();
-                               }
-                           }
-                       });
-                   }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
 
-               }
-           });
-           client.newCall(request1).enqueue(new Callback() {
-               @Override
-               public void onFailure(Call call, IOException e) {
-                   e.printStackTrace();
-               }
+                }
+            });
+            client.newCall(request1).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
+                }
 
-               @Override
-               public void onResponse(Call call, Response response) throws IOException {
-                   if (response.isSuccessful()) {
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (response.isSuccessful()) {
 
-                       final String myResponse = response.body().string();
-                       //System.out.println(myResponse);
+                        final String myResponse = response.body().string();
+                        //System.out.println(myResponse);
 
-                       Statistics.this.runOnUiThread(new Runnable() {
-                           @Override
-                           public void run() {
-                               String risk;
-
-
-                               try {
-
-                                   JSONObject obj = new JSONObject(myResponse);
-                                   System.out.println(obj);
-                                   JSONObject riskLevel = obj.getJSONObject("riskLevels");
-                                   risk = riskLevel.getString("overall");
-                                   risklevel.setText(risk);
+                        Statistics.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String risk;
 
 
-                               } catch (JSONException e) {
-                                   e.printStackTrace();
-                               }
-                           }
-                       });
-                   }
+                                try {
 
-               }
-           });
+                                    JSONObject obj = new JSONObject(myResponse);
+                                    System.out.println(obj);
+                                    JSONObject riskLevel = obj.getJSONObject("riskLevels");
+                                    risk = riskLevel.getString("overall");
+                                    risklevel.setText(risk);
+
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+
+                }
+            });
 
         });
-        try {
+       /* try {
             threads[0].join();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
         threads[1].start();
 
 /*
@@ -347,11 +352,11 @@ public class Statistics extends AppCompatActivity {
                 Geocoder gc = new Geocoder(this, Locale.getDefault());
                 result = gc.getFromLocation(location.getLatitude(),
                         location.getLongitude(), 1);
-     //           val geoApiCtx = GeoApiContext.Builder()
-       //                 .apiKey(Util.readGoogleApiKey(location))
-        //                .build()
+                //           val geoApiCtx = GeoApiContext.Builder()
+                //                 .apiKey(Util.readGoogleApiKey(location))
+                //                .build()
                 System.out.println(result.getClass());
-               // Toast.makeText(this, "address info："+result.toString(), Toast.LENGTH_LONG).show();
+                // Toast.makeText(this, "address info："+result.toString(), Toast.LENGTH_LONG).show();
                 Log.v("TAG", "address："+result.toString());
                 System.out.println("11111"+ result.toString());
                 Object[] address1 = result.toArray();
@@ -374,7 +379,7 @@ public class Statistics extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-       // return result;
+        // return result;
     }
     private void setSliderViews() {
         for(int i=0;i<3;i++)
